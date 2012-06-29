@@ -1,13 +1,21 @@
 @(title: String)
 
 @main("blah"){
+  <h1>What are the others doing?</h1>
 
-<form>
-  <label for="project">What is your project?</label> 
-  <input type="text" name="project" id="project"/>
-</form>
+  <form id='tellMe'>
+    <label for="project">Tell me your project, and I'll spy on the others for you : </label> 
+    <input type="text" name="project" id="project"/>
+  </form>
 
   <ul id="messages"></ul>
   <script src="@routes.Assets.at("javascripts/client.js")" type="text/javascript"></script>
+  <script type="text/template" id="message_template">
+<dl>
+<dt> <%= projet %>  </dt>
+<dd> <%= texte %> </dd>
+<dd> @@ <%= date %></dd>
+</dl>
+  </script>
 }
 
