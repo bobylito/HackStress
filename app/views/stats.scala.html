@@ -1,0 +1,35 @@
+@(title: String)
+
+@main("Statistiques"){
+  <h1>Statistiques</h1>
+
+  <table>
+  <thead>
+  		<tr>
+  			<td>Projet</td>
+  			<td>Nombre de lignes</td>
+  			<td>Nombre de fichiers</td>
+  			<td></td>
+  		</tr>
+  
+  </thead>
+  	<tbody>
+  	</tbody>
+  </table>
+  
+  <script type="text/javascript">
+    jQuery(function($){
+      if(!!window.EventSource) {
+        var source = new EventSource("/live");
+
+        source.onmessage =  function(e) {
+          var msg = JSON.parse(e.data);
+          msg.date = new Date().toLocaleDateString();
+
+          $.getJSON("/");
+        };
+      }
+    });
+  </script>
+}
+

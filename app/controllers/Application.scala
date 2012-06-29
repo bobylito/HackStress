@@ -17,7 +17,11 @@ object Application extends Controller with OAuthAuthentication {
     val ( output, channel ) = Concurrent.broadcast[Message]
 
     def index = Action {
-        Ok(views.html.index("Your new application is ready."))
+        Ok(views.html.index(""))
+    }
+
+    def stats = Action {
+      Ok(views.html.stats("Statistiques"))
     }
 
     def client = Action{

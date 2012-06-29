@@ -6,6 +6,8 @@
 GET     /                           controllers.Application.index
 POST    /capitaine                  controllers.Application.webhook
 
+GET     /stats                      controllers.Application.stats
+
 GET     /projects                   controllers.Projects.list
 GET     /projects/new               controllers.Projects.form
 POST    /projects                   controllers.Projects.submit
