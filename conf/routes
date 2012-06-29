@@ -15,6 +15,6 @@ GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
 
 GET     /client                     controllers.Application.client
-GET     /live                       controllers.Application.live
+GET     /live/:project              controllers.Application.live(project)
 
 GET     /push                       controllers.Application.push

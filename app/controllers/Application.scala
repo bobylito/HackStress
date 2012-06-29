@@ -22,9 +22,10 @@ object Application extends Controller {
       Ok(views.html.client("Hi"))
     }
     
-    def live = Action {
+    def live (project : String) = Action {
         Ok.feed(
             output &> 
+            Enumeratee.filter(m => m.projet != project) &>
             Enumeratee.map( m=> Json.obj( "projet" -> m.projet, "texte" -> m.texte ).as[JsValue] ) &>
             EventSource[JsValue]() ><> 
             Enumeratee.map(_.getBytes("UTF-8"))
