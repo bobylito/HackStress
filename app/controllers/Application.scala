@@ -53,7 +53,14 @@ object Application extends Controller {
 
     def work( json: JsValue ) = {
         println( json )
-        channel.push( Message(-1,"lambada",json.toString) )
+
+        val user = json \ "pusher" \ "name"
+        val repo = json \ "repository" \ "name"
+        val sizeRepo = json \ "repository" \ "size"
+        val message = json \ "message"
+        
+        channel.push( Message(-1, repo.toString, 
+            "Repo : " + repo.toString +" - Commiter : " + user.toString + " - " + message.toString ) )
     }
 
 }
