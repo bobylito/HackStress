@@ -1,6 +1,8 @@
 package controllers
 
 import play.api._
+import play.api.data._
+import play.api.data.Forms._
 import play.api.mvc._
 import play.api.libs._
 import play.api.libs.iteratee._
@@ -31,15 +33,19 @@ object Application extends Controller {
         Ok( "Pushed")
     }
 
+    val webHookForm = Form( "payload" -> nonEmptyText )
+
     def webhook = Action { implicit request =>
         Logger.debug("Message reçu")
-        request.body.asMultipartFormData.map({ f =>
-            f.asFormUrlEncoded.get("payload").map({ json => 
-                work( Json.parse(json(0)) )
-                
-            }).getOrElse(InternalServerError)
-        })
-        Ok
+
+        webHookForm.bindFromRequest.fold(
+            formWithErrors => { BadRequest },
+            { case (payload) =>
+                Logger.debug( "Contenu du message : " + payload )
+                work( Json.parse(payload) )
+                Ok
+            }
+        )
     }
 
     def work( json: JsValue ) = {
