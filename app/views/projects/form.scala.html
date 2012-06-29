@@ -1,0 +1,16 @@
+@(form: Form[Projet])
+
+@main(Messages("Projects")) {
+
+@helper.form(action = routes.Projects.submit) {
+    @helper.inputText(form("name"),
+                      '_label -> Messages("project.name"))
+    @helper.inputText(form("urlRepo"),
+                      '_label -> Messages("project.git_clone_url"))
+    @helper.inputText(form("plTrigram"),
+                      '_label -> Messages("project.pltrigram"),
+                      '_error -> Messages("project.three_letters_max"))
+    <input type="submit" value="@Messages("create")"></input>
+}
+
+}
