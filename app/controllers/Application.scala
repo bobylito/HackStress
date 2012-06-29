@@ -32,7 +32,7 @@ object Application extends Controller {
     }
 
     def push = Action {
-        channel.push( Message(-1,"toto","hello") )
+        channel.push( Message("-1","toto","hello") )
         Ok( "Pushed")
     }
 
@@ -54,12 +54,14 @@ object Application extends Controller {
     def work( json: JsValue ) = {
         println( json )
 
+        val id = json \ "id"
         val user = json \ "pusher" \ "name"
         val repo = json \ "repository" \ "name"
         val sizeRepo = json \ "repository" \ "size"
         val message = json \ "message"
+        val timeStamp = json \ "timestamp"
         
-        channel.push( Message(-1, repo.toString, 
+        channel.push( Message(id.toString, repo.toString, 
             "Repo : " + repo.toString +" - Commiter : " + user.toString + " - " + message.toString ) )
     }
 
