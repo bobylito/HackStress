@@ -68,11 +68,11 @@ object Application extends Controller with OAuthAuthentication {
         val user = ts( json \ "pusher" \ "name" )
         val repo = ts( json \ "repository" \ "name" )
         val sizeRepo = ts( json \ "repository" \ "size" )
-        val message = ts( json \ "message" )
-        val timeStamp = ts( json \ "timestamp" )
-        val repoOwner = json \ "repository" \ "owner" \ "name"
+        val message = ts( json \ "head_commit" \ "message" )
+        val timeStamp = ts( json \ "head_commit" \ "timestamp" )
+        val repoOwner = ts( json \ "repository" \ "owner" \ "name" )
 
-        GitHub.commit(repoOwner.toString(),repo.toString,id.toString())
+        GitHub.commit(repoOwner,repo,id)
 
         Logger.info( message.toString)
 
@@ -130,14 +130,18 @@ object Application extends Controller with OAuthAuthentication {
             {"pusher":{"name":"Timshel","email":"knujunk@free.fr"},
             "repository":{"name":"WebHook","created_at":"2012-06-29T04:10:10-07:00","size":92,"has_wiki":true,"private":false,"watchers":1,"url":"https://github.com/Timshel/WebHook","fork":false,"pushed_at":"2012-06-29T04:49:29-07:00","open_issues":0,"has_downloads":true,"has_issues":true,"forks":1,"description":"","owner":{"name":"Timshel","email":"knujunk@free.fr"}},
             "forced":false,
-            "head_commit":{"modified":["README"],"added":[],"removed":[],
-            "author":{"name":"Jacques","email":"jba@zenexity.com"},
-            "timestamp":"2012-06-29T04:49:20-07:00",
-            "url":"https://github.com/Timshel/WebHook/commit/d8ad3e06ff3290284541db191a30b3ecfbe2eff1",
-            "id":"d8ad3e06ff3290284541db191a30b3ecfbe2eff1",
-            "distinct":true,
-            "message":"YAHHHHHHH",
-            "committer":{"name":"Jacques","email":"jba@zenexity.com"}},
+            "head_commit":{
+                "modified":["README"],
+                "added":[],
+                "removed":[],
+                "author":{"name":"Jacques","email":"jba@zenexity.com"},
+                "timestamp":"2012-06-29T04:49:20-07:00",
+                "url":"https://github.com/Timshel/WebHook/commit/d8ad3e06ff3290284541db191a30b3ecfbe2eff1",
+                "id":"d8ad3e06ff3290284541db191a30b3ecfbe2eff1",
+                "distinct":true,
+                "message":"YAHHHHHHH",
+                "committer":{"name":"Jacques","email":"jba@zenexity.com"}
+            },
             "after":"d8ad3e06ff3290284541db191a30b3ecfbe2eff1",
             "deleted":false,
             "commits":[{"modified":["README"],"added":[],"removed":[],
