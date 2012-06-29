@@ -18,3 +18,9 @@ GET     /client                     controllers.Application.client
 GET     /live/:project              controllers.Application.live(project)
 
 GET     /push                       controllers.Application.push
+
+GET     /auth                       controllers.Application.authenticate
+
+GET		/oauthcallback				controllers.Application.oauthcallback
+
+GET		/tweet/:msg					controllers.Application.tweet(msg: String)

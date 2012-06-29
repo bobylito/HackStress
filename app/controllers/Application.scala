@@ -7,10 +7,11 @@ import play.api.mvc._
 import play.api.libs._
 import play.api.libs.iteratee._
 import play.api.libs.json._
-
+import play.api.libs.oauth._
+import play.api.libs.ws.WS
 import models._
 
-object Application extends Controller {
+object Application extends Controller with OAuthAuthentication {
   
     val ( output, channel ) = Concurrent.broadcast[Message]
 
@@ -65,5 +66,33 @@ object Application extends Controller {
         channel.push( Message(id.toString, repo.toString, 
             "Repo : " + repo.toString +" - Commiter : " + user.toString + " - " + message.toString ) )
     }
+
+    import java.net.URLEncoder
+
+    def tweet( msg: String ) = Authenticated { token => implicit request =>
+        Async { WS.url(tweetUpdateUrl + "?status=%s".format(URLEncoder.encode(msg, "UTF-8")))
+            //.withQueryString("status" -> msg)
+            .sign(OAuthCalculator(consumerKey, token))
+            .post("ignored")
+            .map { resp =>
+                Ok("Update Resp:%s".format(resp.json))
+            }
+        }
+    }
+
+    def oauthcallback = Authenticated { token => implicit request =>
+        Ok("Authenticated")
+    }
+
+    val authenticateCall = routes.Application.authenticate
+    val authenticatedCall = routes.Application.index
+
+    val consumerKey = ConsumerKey("uRNd9XuEzmr207c1Vl38w", "W0YB20CjF0GWw538ikzSn2horFvL1hjwaduICKLdmVM")
+    val oAuth = OAuth(ServiceInfo("https://api.twitter.com/oauth/request_token",
+        "https://api.twitter.com/oauth/access_token",
+        "https://api.twitter.com/oauth/authorize",
+        consumerKey))
+
+    val tweetUpdateUrl = "https://api.twitter.com/1/statuses/update.json"
 
 }
