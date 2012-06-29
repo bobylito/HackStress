@@ -1,0 +1,8 @@
+app.title=HackStress
+
+projects=Projets
+project.name=Nom
+project.git_clone_url=URL git clone
+project.pltrigram=Trigramme du PL
+project.three_letters_max=3 lettres…
+create=Créer
