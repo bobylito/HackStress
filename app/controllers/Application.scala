@@ -70,6 +70,9 @@ object Application extends Controller with OAuthAuthentication {
         val sizeRepo = ts( json \ "repository" \ "size" )
         val message = ts( json \ "message" )
         val timeStamp = ts( json \ "timestamp" )
+        val repoOwner = json \ "repository" \ "owner" \ "name"
+
+        GitHub.commit(repoOwner.toString(),repo.toString,id.toString())
 
         Logger.info( message.toString)
 
@@ -100,6 +103,7 @@ object Application extends Controller with OAuthAuthentication {
 
     def oauthcallback = Authenticated { token => implicit request =>
         Ok("Authenticated")
+
     }
 
     val authenticateCall = routes.Application.authenticate
