@@ -11,7 +11,7 @@ $(function() {
 
           source.onmessage =  function(e) {
             var msg = JSON.parse(e.data);
-            msg.date = new Date().toLocaleDateString();
+            msg.date = new Date().toLocaleFormat("%Hh%M");
             $("#messages").append( msgTemplate( msg ) )
           };
         }

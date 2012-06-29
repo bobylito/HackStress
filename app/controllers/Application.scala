@@ -27,8 +27,17 @@ object Application extends Controller with OAuthAuthentication {
     def client = Action{
       Ok(views.html.client("Hi"))
     }
+
+    def liveAll = Action {
+        Ok.feed(
+            output &> 
+            Enumeratee.map( m=> Json.obj( "projet" -> m.projet, "texte" -> m.texte ).as[JsValue] ) &>
+            EventSource[JsValue]() ><> 
+            Enumeratee.map(_.getBytes("UTF-8"))
+        ).as("text/event-stream")        
+    }
     
-    def live (project : String) = Action {
+    def live( project : String ) = Action {
         Ok.feed(
             output &> 
             Enumeratee.filter(m => m.projet != project) &>
