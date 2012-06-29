@@ -90,7 +90,7 @@ object Application extends Controller with OAuthAuthentication {
         Logger.info( message.toString)
 
         val msg = Message(id.toString, repo, "Repo : " + repo + " - Commiter : " + user + " - " + message )
-        tweet(msg.texte + " #zen_hackstress")
+        tweet( "#" + repo + " #" + user + " " + message +  " #zen_hackstress")
         channel.push( msg )
     }
 
