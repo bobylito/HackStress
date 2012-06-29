@@ -85,7 +85,7 @@ object Application extends Controller with OAuthAuthentication {
         val timeStamp = ts( json \ "head_commit" \ "timestamp" )
         val repoOwner = ts( json \ "repository" \ "owner" \ "name" )
 
-        GitHub.commitMetrics(repoOwner,repo,id)
+        Metrics.save(GitHub.commitMetrics(repoOwner,repo,id))
 
         Logger.info( message.toString)
 

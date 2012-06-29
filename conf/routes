@@ -15,7 +15,6 @@ POST    /projects                   controllers.Projects.submit
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
-
 GET     /client                     controllers.Application.client
 GET     /live			            controllers.Application.liveAll
 GET     /live/:project              controllers.Application.live(project)

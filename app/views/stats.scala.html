@@ -26,7 +26,11 @@
           var msg = JSON.parse(e.data);
           msg.date = new Date().toLocaleDateString();
 
-          $.getJSON("/");
+          $.getJSON("/metrics", function(data){
+          
+          }).error(function(e){
+            console.log("impossible de récupérer les données", e);
+          });
         };
       }
     });
