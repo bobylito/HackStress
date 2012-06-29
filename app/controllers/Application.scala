@@ -20,10 +20,10 @@ object Application extends Controller {
     
     def live = Action {
         Ok.feed(
-        output &> 
+            output &> 
             EventSource[JsValue]() ><> 
-        Enumeratee.map(_.getBytes("UTF-8"))
-          ).as("text/event-stream")
+            Enumeratee.map(_.getBytes("UTF-8"))
+        ).as("text/event-stream")
     }
 
     def push = Action {
@@ -32,6 +32,7 @@ object Application extends Controller {
     }
 
     def webhook = Action { implicit request =>
+        Logger.debug("Message reçu")
         request.body.asMultipartFormData.map({ f =>
             f.asFormUrlEncoded.get("payload").map({ json => 
                 work( Json.parse(json(0)) )
