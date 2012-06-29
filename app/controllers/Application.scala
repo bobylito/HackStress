@@ -10,6 +10,7 @@ import play.api.libs.json._
 import play.api.libs.oauth._
 import play.api.libs.ws.WS
 import models._
+import play.api.libs.concurrent.Promise
 
 object Application extends Controller with OAuthAuthentication {
   
@@ -48,11 +49,12 @@ object Application extends Controller with OAuthAuthentication {
             { case (payload) =>
                 Logger.debug( "Contenu du message : " + payload )
                 work( Json.parse(payload) )
+                Ok
             }
         )
     }
 
-    def work( json: JsValue ): Promise[Result] = {
+    def work( json: JsValue ) = {
         println( json )
 
         val id = json \ "id"
@@ -66,7 +68,6 @@ object Application extends Controller with OAuthAuthentication {
             "Repo : " + repo.toString +" - Commiter : " + user.toString + " - " + message.toString )
 
         channel.push( msg )
-        tweet( msg.texte )
     }
 
     import java.net.URLEncoder
