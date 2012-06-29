@@ -72,7 +72,7 @@ object Application extends Controller with OAuthAuthentication {
 
     import java.net.URLEncoder
 
-    def tweet( msg: String ) = Authenticated { token => implicit request =>
+    def tweet( msg: String ) = /*Authenticated { token => implicit request =>*/ Action {
         Async { WS.url(tweetUpdateUrl + "?status=%s".format(URLEncoder.encode(msg, "UTF-8")))
             //.withQueryString("status" -> msg)
             .sign(OAuthCalculator(consumerKey, 
