@@ -63,8 +63,12 @@ object Application extends Controller with OAuthAuthentication {
         val message = json \ "message"
         val timeStamp = json \ "timestamp"
         
-        channel.push( Message(id.toString, repo.toString, 
-            "Repo : " + repo.toString +" - Commiter : " + user.toString + " - " + message.toString ) )
+        val msg = Message(id.toString, repo.toString, 
+            "Repo : " + repo.toString +" - Commiter : " + user.toString + " - " + message.toString )
+
+        tweet( msg.texte )
+
+        channel.push( msg )
     }
 
     import java.net.URLEncoder
