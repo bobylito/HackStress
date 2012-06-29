@@ -39,6 +39,11 @@ object Application extends Controller with OAuthAuthentication {
         Ok( "Pushed")
     }
 
+    def fake = Action {
+        work(Json.parse(texteTest))
+        Ok("Pushed")
+    }
+
     val webHookForm = Form( "payload" -> nonEmptyText )
 
     def webhook = Action { implicit request =>
@@ -54,19 +59,23 @@ object Application extends Controller with OAuthAuthentication {
         )
     }
 
+    def ts( value: JsValue ): String = {
+        value.asOpt[String].getOrElse("Nc")
+    }
+
     def work( json: JsValue ) = {
         println( json )
 
-        val id = json \ "id"
-        val user = json \ "pusher" \ "name"
-        val repo = json \ "repository" \ "name"
-        val sizeRepo = json \ "repository" \ "size"
-        val message = json \ "message"
-        val timeStamp = json \ "timestamp"
-        
-        val msg = Message(id.toString, repo.toString, 
-            "Repo : " + repo.toString +" - Commiter : " + user.toString + " - " + message.toString )
+        val id = ts( json \ "id" )
+        val user = ts( json \ "pusher" \ "name" )
+        val repo = ts( json \ "repository" \ "name" )
+        val sizeRepo = ts( json \ "repository" \ "size" )
+        val message = ts( json \ "message" )
+        val timeStamp = ts( json \ "timestamp" )
 
+        Logger.info( message.toString)
+
+        val msg = Message(id.toString, repo, "Repo : " + repo + " - Commiter : " + user + " - " + message )
         channel.push( msg )
     }
 
@@ -101,4 +110,34 @@ object Application extends Controller with OAuthAuthentication {
 
     val tweetUpdateUrl = "https://api.twitter.com/1/statuses/update.json"
 
+
+
+    val texteTest = """
+            {"pusher":{"name":"Timshel","email":"knujunk@free.fr"},
+            "repository":{"name":"WebHook","created_at":"2012-06-29T04:10:10-07:00","size":92,"has_wiki":true,"private":false,"watchers":1,"url":"https://github.com/Timshel/WebHook","fork":false,"pushed_at":"2012-06-29T04:49:29-07:00","open_issues":0,"has_downloads":true,"has_issues":true,"forks":1,"description":"","owner":{"name":"Timshel","email":"knujunk@free.fr"}},
+            "forced":false,
+            "head_commit":{"modified":["README"],"added":[],"removed":[],
+            "author":{"name":"Jacques","email":"jba@zenexity.com"},
+            "timestamp":"2012-06-29T04:49:20-07:00",
+            "url":"https://github.com/Timshel/WebHook/commit/d8ad3e06ff3290284541db191a30b3ecfbe2eff1",
+            "id":"d8ad3e06ff3290284541db191a30b3ecfbe2eff1",
+            "distinct":true,
+            "message":"YAHHHHHHH",
+            "committer":{"name":"Jacques","email":"jba@zenexity.com"}},
+            "after":"d8ad3e06ff3290284541db191a30b3ecfbe2eff1",
+            "deleted":false,
+            "commits":[{"modified":["README"],"added":[],"removed":[],
+                "author":{"name":"Jacques","email":"jba@zenexity.com"},
+                "timestamp":"2012-06-29T04:49:20-07:00",
+                "url":"https://github.com/Timshel/WebHook/commit/d8ad3e06ff3290284541db191a30b3ecfbe2eff1",
+                "id":"d8ad3e06ff3290284541db191a30b3ecfbe2eff1",
+                "distinct":true,
+                "message":"YAHHHHHHH",
+                "committer":{"name":"Jacques","email":"jba@zenexity.com"}}
+            ],
+            "ref":"refs/heads/master",
+            "before":"3d9e18c5b757851b8c64f3525975b8ee45c46090",
+            "compare":"https://github.com/Timshel/WebHook/compare/3d9e18c5b757...d8ad3e06ff32",
+            "created":false}
+    """
 }

@@ -18,6 +18,7 @@ GET     /client                     controllers.Application.client
 GET     /live/:project              controllers.Application.live(project)
 
 GET     /push                       controllers.Application.push
+GET     /fake                       controllers.Application.fake
 
 GET     /auth                       controllers.Application.authenticate
 
