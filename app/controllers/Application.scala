@@ -23,6 +23,33 @@ object Application extends Controller with OAuthAuthentication {
     def stats = Action {
       Ok(views.html.stats("Statistiques"))
     }
+    
+    def metrics = Action {
+      val res = Metrics.findAll().foldLeft(Map[String, Metrics]())({(acc, m) => 
+        acc.get(m.repoName).map( { existM =>
+          var newMetric = Metrics(
+            0,
+            m.date,
+            m.repoName,
+            m.additions + existM.additions,
+            m.deletions + existM.deletions,
+            m.numberOfFiles + m.numberOfFiles,
+            m.committer)
+          acc ++ Map(m.repoName -> newMetric)
+        }).getOrElse({
+          acc ++ Map(m.repoName -> m)
+        })
+      })
+      implicit def metricsFormat = Generic.productFormat7(
+          "id",
+          "date",
+    "repoName",
+    "additions",
+    "deletions",
+    "numberOfFiles",
+    "committer")(Metrics.apply)(Metrics.unapply)
+      Ok(Json.toJson(res))
+    }
 
     def client = Action{
       Ok(views.html.client("Hi"))
