@@ -75,7 +75,10 @@ object Application extends Controller with OAuthAuthentication {
     def tweet( msg: String ) = Authenticated { token => implicit request =>
         Async { WS.url(tweetUpdateUrl + "?status=%s".format(URLEncoder.encode(msg, "UTF-8")))
             //.withQueryString("status" -> msg)
-            .sign(OAuthCalculator(consumerKey, token))
+            .sign(OAuthCalculator(consumerKey, 
+                play.api.libs.oauth.RequestToken(
+                    "621761912-F9e7sgsncC60TXMTo6rBsF0NxPlKAATD8dfYNqYw",
+                    "q1B0HTY4ArhDsDV7jZYnp30EIdCsh0cobIOidGlc4")))
             .post("ignored")
             .map { resp =>
                 Ok("Update Resp:%s".format(resp.json))
