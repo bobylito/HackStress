@@ -64,8 +64,6 @@ object Application extends Controller with OAuthAuthentication {
     }
 
     def work( json: JsValue ) = {
-        println( json )
-
         val id = ts( json \ "id" )
         val user = ts( json \ "pusher" \ "name" )
         val repo = ts( json \ "repository" \ "name" )
@@ -76,24 +74,29 @@ object Application extends Controller with OAuthAuthentication {
         Logger.info( message.toString)
 
         val msg = Message(id.toString, repo, "Repo : " + repo + " - Commiter : " + user + " - " + message )
+        tweet(msg.texte)
         channel.push( msg )
     }
 
     import java.net.URLEncoder
 
-    def tweet( msg: String ) = /*Authenticated { token => implicit request =>*/ Action {
+    def pushTweet( msg: String ) = Authenticated { token => implicit request =>
         Async { WS.url(tweetUpdateUrl + "?status=%s".format(URLEncoder.encode(msg, "UTF-8")))
             //.withQueryString("status" -> msg)
-            .sign(OAuthCalculator(consumerKey, 
-                play.api.libs.oauth.RequestToken(
-                    "621761912-F9e7sgsncC60TXMTo6rBsF0NxPlKAATD8dfYNqYw",
-                    "q1B0HTY4ArhDsDV7jZYnp30EIdCsh0cobIOidGlc4")))
+            .sign(OAuthCalculator(consumerKey, token))
             .post("ignored")
             .map { resp =>
                 Ok("Update Resp:%s".format(resp.json))
             }
         }
     }
+
+    def tweet( msg: String ) = WS.url(tweetUpdateUrl + "?status=%s".format(URLEncoder.encode(msg, "UTF-8")))
+        .sign(OAuthCalculator(consumerKey, accessToken))
+        .post("ignored")
+        .map { resp =>
+            Ok("Update Resp:%s".format(resp.json))
+        }
 
     def oauthcallback = Authenticated { token => implicit request =>
         Ok("Authenticated")
@@ -103,10 +106,17 @@ object Application extends Controller with OAuthAuthentication {
     val authenticatedCall = routes.Application.index
 
     val consumerKey = ConsumerKey("uRNd9XuEzmr207c1Vl38w", "W0YB20CjF0GWw538ikzSn2horFvL1hjwaduICKLdmVM")
+    
+    val accessToken = RequestToken(
+        "621761912-F9e7sgsncC60TXMTo6rBsF0NxPlKAATD8dfYNqYw",
+        "q1B0HTY4ArhDsDV7jZYnp30EIdCsh0cobIOidGlc4")
+
     val oAuth = OAuth(ServiceInfo("https://api.twitter.com/oauth/request_token",
         "https://api.twitter.com/oauth/access_token",
         "https://api.twitter.com/oauth/authorize",
         consumerKey))
+
+
 
     val tweetUpdateUrl = "https://api.twitter.com/1/statuses/update.json"
 
