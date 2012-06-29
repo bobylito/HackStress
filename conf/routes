@@ -25,3 +25,5 @@ GET     /auth                       controllers.Application.authenticate
 GET		/oauthcallback				controllers.Application.oauthcallback
 
 GET		/tweet/:msg					controllers.Application.pushTweet(msg: String)
+
+GET		/metrics/commit/:projectOwner/:projectName/:sha				controllers.Application.commitMetrics( projectOwner: String, projectName: String, sha: String )

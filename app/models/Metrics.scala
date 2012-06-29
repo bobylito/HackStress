@@ -4,9 +4,9 @@ import cagette._
 import java.util.Date
 
 case class Metrics (
-    date : Date,
+    date : String,
     repoName: String,
     additions : Int,
     deletions : Int,
     numberOfFiles: Int,
-    commiter: String) 
+    committer: String) 

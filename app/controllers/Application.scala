@@ -72,7 +72,7 @@ object Application extends Controller with OAuthAuthentication {
         val timeStamp = ts( json \ "head_commit" \ "timestamp" )
         val repoOwner = ts( json \ "repository" \ "owner" \ "name" )
 
-        GitHub.commit(repoOwner,repo,id)
+        GitHub.commitMetrics(repoOwner,repo,id)
 
         Logger.info( message.toString)
 
@@ -100,6 +100,10 @@ object Application extends Controller with OAuthAuthentication {
         .map { resp =>
             Ok("Update Resp:%s".format(resp.json))
         }
+
+    def commitMetrics( projectOwner: String, projectName: String, sha: String ) = Action {
+        Ok(GitHub.commitMetrics(projectOwner, projectName, sha).toString)
+    }
 
     def oauthcallback = Authenticated { token => implicit request =>
         Ok("Authenticated")
