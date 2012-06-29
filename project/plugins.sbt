@@ -4,5 +4,7 @@ logLevel := Level.Warn
 // The Typesafe repository 
 resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/"
 
+resolvers += "Guillaume Bort" at "http://guillaume.bort.fr/repository"
+
 // Use the Play sbt plugin for Play projects
 addSbtPlugin("play" % "sbt-plugin" % "2.1-SNAPSHOT")
