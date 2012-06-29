@@ -164,11 +164,7 @@ object Application extends Controller with OAuthAuthentication {
         "https://api.twitter.com/oauth/authorize",
         consumerKey))
 
-
-
     val tweetUpdateUrl = "https://api.twitter.com/1/statuses/update.json"
-
-
 
     val texteTest = """
             {"pusher":{"name":"Timshel","email":"knujunk@free.fr"},
