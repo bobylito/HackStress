@@ -48,12 +48,11 @@ object Application extends Controller with OAuthAuthentication {
             { case (payload) =>
                 Logger.debug( "Contenu du message : " + payload )
                 work( Json.parse(payload) )
-                Ok
             }
         )
     }
 
-    def work( json: JsValue ) = {
+    def work( json: JsValue ): Promise[Result] = {
         println( json )
 
         val id = json \ "id"
@@ -66,9 +65,8 @@ object Application extends Controller with OAuthAuthentication {
         val msg = Message(id.toString, repo.toString, 
             "Repo : " + repo.toString +" - Commiter : " + user.toString + " - " + message.toString )
 
-        tweet( msg.texte )
-
         channel.push( msg )
+        tweet( msg.texte )
     }
 
     import java.net.URLEncoder
