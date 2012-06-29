@@ -23,4 +23,4 @@ GET     /auth                       controllers.Application.authenticate
 
 GET		/oauthcallback				controllers.Application.oauthcallback
 
-GET		/tweet/:msg					controllers.Application.tweet(msg: String)
+GET		/tweet/:msg					controllers.Application.pushTweet(msg: String)
